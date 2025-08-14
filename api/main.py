@@ -1,7 +1,7 @@
 import os
 import joblib
 import pandas as pd
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from api.schemas import PredictRequest, PredictResponse
 
 APP_NAME = "Titanic Survival API"
@@ -14,18 +14,29 @@ try:
 except Exception as e:
     raise RuntimeError(f"No se pudo cargar el modelo en {MODEL_PATH}: {e}")
 
-@app.get("/", tags=["root"]) 
-def root():
+@app.get("/", tags=["root"]) # Home con los endpoints
+def root(request: Request):
     return {
         "service": APP_NAME,
-        "health": "/health",
+        "version": app.version,
+        "health": str(request.url_for("health")),
+        "readiness": str(request.url_for("ready")),
         "docs": "/docs",
-        "predict": "/predict"
+        "predict": str(request.url_for("predict")),
     }
 
-@app.get("/health", tags=["health"])  # usado por Render y verificación rápida
+@app.get("/health", tags=["health"])  # Para confirmacion rápida de la api
 def health():
     return {"status": "ok"}
+
+@app.get("/ready") # Para confirmacion de que puede predecir
+def ready():
+    try:
+        # Señal mínima de que el modelo cargó y está entrenado
+        _ = pipeline.classes_
+        return {"ready": True}
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=f"No está listo: {e}")
 
 @app.post("/predict", response_model=PredictResponse, tags=["predict"])  
 def predict(req: PredictRequest):
