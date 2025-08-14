@@ -1,15 +1,8 @@
 # Titanic Survival API (FastAPI + Render)
-Servicio de predicción (Regresión Logística) que estima la probabilidad de supervivencia de un pasajero del Titanic. La API acepta **entradas crudas**, tal como vienen en el dataset, y realiza el preprocesamiento internamente (imputación, One‑Hot Encoding y `familysize`).
-
-<!-- ---
-## 1) Demo en vivo
-- **URL (Render)**: https://TU-APP.onrender.com
-- **Docs (Swagger)**: https://TU-APP.onrender.com/docs
-
-> Si ves error al primer intento, espera unos segundos y reintenta (posible *cold start* en plan Free). -->
+Servicio de predicción (Regresión Logística) que estima la probabilidad de supervivencia de un pasajero del Titanic. La API acepta **entradas crudas**, tal como vienen en el dataset, y realiza el preprocesamiento internamente (imputación, One‑Hot Encoding y creación de variable `familysize`).
 
 ---
-## 2) Estructura del proyecto
+## 1) Estructura del proyecto
 ```
 titanic-api/
 ├─ api/
@@ -28,10 +21,16 @@ titanic-api/
 ├─ .gitignore                # exclusiones git
 └─ data/                     # (opcional) titanic.csv si no usas seaborn
 ```
+<!-- ---
+## 2) Demo en vivo
+- **URL (Render)**: https://TU-APP.onrender.com
+- **Docs (Swagger)**: https://TU-APP.onrender.com/docs
+
+> Si ves error al primer intento, espera unos segundos y reintenta (posible *cold start* en plan Free). -->
 
 ---
 ## 3) Endpoints
-- `GET /` → Índice con rutas útiles.
+- `GET /` → Índice con rutas disponibles.
 - `GET /health` → Chequeo rápido de liveness. Responde `{ "status": "ok" }`.
 - `GET /ready` → Readiness: confirma que el modelo está cargado. Responde `{ "ready": true }` o `503` si no.
 - `POST /predict` → **Endpoint principal**. Recibe un JSON con los datos del pasajero y entrega `{prediction, probability, verdict}`.
@@ -51,7 +50,7 @@ Ejemplo:
 }
 ```
 **Campos:**
-- `pclass` *(int, requerido)*: 1, 2 o 3. **Clase del pasajero**
+- `pclass` *(int, requerido)*: 1, 2 o 3. **Clase del pasajero**.
 - `age` *(float, opcional)*: ≥ 0. **Edad del pasajero** - Si no viene o es `null`, se imputa (mediana).
 - `fare` *(float, opcional)*: ≥ 0. **Tarifa pagada** - Si no viene o es `null`, se imputa (mediana).
 - `sibsp` *(int, requerido)*: ≥ 0. **N° de hermanos/esposo(a) a bordo**.
@@ -73,12 +72,4 @@ Ejemplo:
 - `prediction` *(int)*: `0 = no sobrevive`, `1 = sobrevive`.
 - `probability` *(float)*: probabilidad de clase 1 en rango `[0, 1]`.
 - `verdict` *(string)*: etiqueta humana derivada de `prediction` (`"sobrevive"` o `"no_sobrevive"`).
-
-```json
-{
-  "prediction": 1,
-  "probability": 0.8731
-}
-```
-- `prediction` *(int)*: `0 = no sobrevive`, `1 = sobrevive`.
-- `probability` *(float)*: probabilidad de clase 1 en rango `[0, 1]`.
+---
