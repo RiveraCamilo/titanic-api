@@ -5,8 +5,8 @@ venv/
 env/
 .env
 .ipynb_checkpoints/
-.data/
-data/
+# .data/
+# data/  
 model/*.pkl
 # model/*.joblib
 .DS_Store
