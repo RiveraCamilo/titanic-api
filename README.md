@@ -71,5 +71,5 @@ Ejemplo:
 ```
 - `prediction` *(int)*: `0 = no sobrevive`, `1 = sobrevive`.
 - `probability` *(float)*: probabilidad de clase 1 en rango `[0, 1]`.
-- `verdict` *(string)*: etiqueta humana derivada de `prediction` (`"sobrevive"` o `"no_sobrevive"`).
+- `verdict` *(string)*: etiqueta de texto derivada de `prediction` (`"sobrevive"` o `"no_sobrevive"`).
 ---
