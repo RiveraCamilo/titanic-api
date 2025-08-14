@@ -1,0 +1,21 @@
+{
+  "features_raw": [
+    "pclass",
+    "age",
+    "fare",
+    "familysize",
+    "sex",
+    "embarked"
+  ],
+  "categories": {
+    "sex": [
+      "female",
+      "male"
+    ],
+    "embarked": [
+      "C",
+      "Q",
+      "S"
+    ]
+  }
+}
