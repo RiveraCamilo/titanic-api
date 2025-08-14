@@ -59,7 +59,9 @@ def predict(req: PredictRequest):
         # Predicción
         proba = float(pipeline.predict_proba(X)[0][1])
         pred = int(pipeline.predict(X)[0])
-        return {"prediction": pred, "probability": proba}
+        return {"prediction": pred, 
+                "probability": proba,
+                "verdict": "sobrevive" if pred == 1 else "no_sobrevive"}
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error en la predicción: {e}")

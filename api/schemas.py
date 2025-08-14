@@ -5,8 +5,8 @@ class PredictRequest(BaseModel):
     pclass: int = Field(..., description="Clase del pasajero: 1, 2 o 3")
     age: Optional[float] = Field(None, ge=0, description="Edad en años")
     fare: Optional[float] = Field(None, ge=0, description="Tarifa pagada")
-    sibsp: int = Field(..., ge=0, description="cantidad de hermanos/esposo(a) a bordo")
-    parch: int = Field(..., ge=0, description="cantidad de padres/hijos a bordo")
+    sibsp: int = Field(..., ge=0, description="Cantidad de hermanos/esposo(a) a bordo")
+    parch: int = Field(..., ge=0, description="Cantidad de padres/hijos a bordo")
     sex: Literal["male", "female"] = Field(..., description='"male" o "female"')
     embarked: Literal["C", "Q", "S"] = Field(..., description='Puerto de embarque: "C", "Q" o "S"')
 
@@ -38,3 +38,4 @@ class PredictRequest(BaseModel):
 class PredictResponse(BaseModel):
     prediction: int = Field(..., description="0 = no sobrevive, 1 = sobrevive")
     probability: float = Field(..., ge=0.0, le=1.0, description="Probabilidad de clase 1")
+    verdict: Literal["sobrevive", "no_sobrevive"] = Field(..., description="Veredicto de la predicción")
