@@ -4,9 +4,9 @@ Servicio de predicción (Regresión Logística) que estima la probabilidad de su
 <!-- ---
 ## 1) Demo en vivo
 - **URL (Render)**: https://TU-APP.onrender.com
-- **Docs (Swagger)**: https://TU-APP.onrender.com/docs -->
+- **Docs (Swagger)**: https://TU-APP.onrender.com/docs
 
-> Si ves error al primer intento, espera unos segundos y reintenta (posible *cold start* en plan Free).
+> Si ves error al primer intento, espera unos segundos y reintenta (posible *cold start* en plan Free). -->
 
 ---
 ## 2) Estructura del proyecto
@@ -33,7 +33,7 @@ titanic-api/
 ## 3) Endpoints
 - `GET /` → Índice con rutas útiles.
 - `GET /health` → Chequeo rápido de liveness. Responde `{ "status": "ok" }`.
-- `GET /ready` → (opcional) Readiness: confirma que el modelo está cargado. Responde `{ "ready": true }` o `503` si no.
+- `GET /ready` → Readiness: confirma que el modelo está cargado. Responde `{ "ready": true }` o `503` si no.
 - `POST /predict` → **Endpoint principal**. Recibe un JSON con los datos del pasajero y entrega `{prediction, probability, verdict}`.
 
 ---
@@ -51,13 +51,13 @@ Ejemplo:
 }
 ```
 **Campos:**
-- `pclass` *(int, requerido)*: 1, 2 o 3.
-- `age` *(float, opcional)*: ≥ 0. Si no viene o es `null`, se imputa (mediana).
-- `fare` *(float, opcional)*: ≥ 0. Si no viene o es `null`, se imputa (mediana).
-- `sibsp` *(int, requerido)*: ≥ 0. N° de hermanos/esposo(a) a bordo.
-- `parch` *(int, requerido)*: ≥ 0. N° de padres/hijos a bordo.
-- `sex` *(enum, requerido)*: `"male"` | `"female"` (normaliza a minúsculas).
-- `embarked` *(enum, requerido)*: `"C"` | `"Q"` | `"S"` (normaliza a mayúsculas).
+- `pclass` *(int, requerido)*: 1, 2 o 3. **Clase del pasajero**
+- `age` *(float, opcional)*: ≥ 0. **Edad del pasajero** - Si no viene o es `null`, se imputa (mediana).
+- `fare` *(float, opcional)*: ≥ 0. **Tarifa pagada** - Si no viene o es `null`, se imputa (mediana).
+- `sibsp` *(int, requerido)*: ≥ 0. **N° de hermanos/esposo(a) a bordo**.
+- `parch` *(int, requerido)*: ≥ 0. **N° de padres/hijos a bordo**.
+- `sex` *(enum, requerido)*: `"male"` | `"female"`. **Sexo del pasajero** (normaliza a minúsculas).
+- `embarked` *(enum, requerido)*: `"C"` | `"Q"` | `"S"`. **Puerto de embarque** (normaliza a mayúsculas).
 
 **Nota:** La API **deriva** internamente `familysize = sibsp + parch + 1` y aplica el mismo preprocesamiento usado al entrenar.
 
