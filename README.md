@@ -21,12 +21,12 @@ titanic-api/
 ├─ .gitignore                # exclusiones git
 └─ data/                     # (opcional) titanic.csv si no usas seaborn
 ```
-<!-- ---
+---
 ## 2) Demo en vivo
-- **URL (Render)**: https://TU-APP.onrender.com
-- **Docs (Swagger)**: https://TU-APP.onrender.com/docs
+- **URL (Render)**: https://titanic-api-vtf1.onrender.com/
+- **Docs (Swagger)**: https://titanic-api-vtf1.onrender.com/docs
 
-> Si ves error al primer intento, espera unos segundos y reintenta (posible *cold start* en plan Free). -->
+> Si ves error al primer intento, espera unos segundos y reintenta (posible *cold start* en plan Free).
 
 ---
 ## 3) Endpoints
@@ -73,3 +73,110 @@ Ejemplo:
 - `probability` *(float)*: probabilidad de clase 1 en rango `[0, 1]`.
 - `verdict` *(string)*: etiqueta de texto derivada de `prediction` (`"sobrevive"` o `"no_sobrevive"`).
 ---
+## 6) Ejemplos de uso
+### cURL
+```bash
+curl -X POST "https://titanic-api-vtf1.onrender.com/predict" \
+  -H "Content-Type: application/json" \
+  -d '{
+        "pclass":3, "age":29, "fare":7.25,
+        "sibsp":0, "parch":0,
+        "sex":"male", "embarked":"S"
+      }'
+```
+
+### Python (requests)
+```python
+import requests
+API = "https://titanic-api-vtf1.onrender.com/predict"
+payload = {
+  "pclass": 1, "age": 38, "fare": 71.2833,
+  "sibsp": 1, "parch": 0,
+  "sex": "female", "embarked": "C"
+}
+print(requests.post(API, json=payload, timeout=20).json())
+```
+
+### Postman
+- Método: **POST**
+- URL: `https://titanic-api-vtf1.onrender.com/predict`
+- Headers: `Content-Type: application/json`
+- Body → raw (JSON) → pega el ejemplo de arriba.
+
+---
+## 7) Correr localmente
+```bash
+# 1) Instalar dependencias (mínimas para producción)
+pip install -r requirements.txt
+
+# 2) Entrenar (opcional si ya versionaste el .joblib)
+python model/train_model.py   # genera model/pipeline.joblib
+
+# 3) Levantar API local
+uvicorn api.main:app --reload  # http://127.0.0.1:8000/docs
+```
+**Cliente de prueba**:
+```bash
+# contra local
+python client.py
+
+# contra Render
+API_URL="https://titanic-api-vtf1.onrender.com/" python client.py
+```
+
+**Tests (opcional):**
+```bash
+python -m pip install -r requirements-dev.txt  # si usas archivo dev
+python -m pytest -q
+```
+
+---
+## 8) Errores comunes y respuestas
+### Validación (422 Unprocessable Entity)
+Ejemplo: `embarked` inválido
+```json
+{
+  "detail": [
+    {
+      "type": "value_error",
+      "loc": ["body","embarked"],
+      "msg": "embarked debe ser 'C', 'Q' o 'S'",
+      "input": "X"
+    }
+  ]
+}
+```
+### Error de predicción (400 Bad Request)
+```json
+{ "detail": "Error en la predicción: <mensaje>" }
+```
+### Readiness (503 Service Unavailable)
+```json
+{ "detail": "not ready: ..." }
+```
+
+---
+## 9) Despliegue en Render (resumen)
+- **Build**: `pip install -r requirements.txt`
+- **Start**: `uvicorn api.main:app --host 0.0.0.0 --port $PORT`
+- Asegúrate de **versionar** `model/pipeline.joblib` en el repo para no entrenar en Render.
+- Opcional: `render.yaml` con `runtime: python` y plan `free`.
+
+---
+## 10) Detalles del modelo
+- Algoritmo: `LogisticRegression(max_iter=1000)`.
+- Preprocesamiento: `SimpleImputer(strategy="median")` para numéricos y `OneHotEncoder` para `sex` y `embarked` (`handle_unknown="ignore"`).
+- Features de entrada: `pclass, age, fare, familysize, sex, embarked`.
+- Metadata: ver `model/meta.json`.
+
+---
+## 11) Troubleshooting
+- **`Error: Option '--port' requires an argument`**: localmente usa `--port 8000` (Render inyecta `$PORT`).
+- **`No se pudo cargar el modelo...`**: falta `model/pipeline.joblib` → ejecuta `python model/train_model.py` o versiona el archivo en el repo.
+- **`from api.main import app` falla en tests**: corre `pytest` desde la raíz y asegúrate de tener `api/__init__.py`.
+- **Diferencias de versiones**: sincroniza `requirements.txt` con lo instalado localmente.
+
+---
+## 12) Licencia & contacto
+- Uso académico/demo.
+- Contacto: *ciriverav@gmail.com*.

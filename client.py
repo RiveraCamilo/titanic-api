@@ -2,7 +2,7 @@ import os
 import json
 import requests
 
-API_URL = os.getenv("API_URL", "http://127.0.0.1:8000")
+API_URL = os.getenv("API_URL", "https://titanic-api-vtf1.onrender.com/")
 PREDICT_URL = f"{API_URL}/predict"
 
 cases = [
