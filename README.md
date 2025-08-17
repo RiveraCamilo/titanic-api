@@ -123,13 +123,6 @@ python client.py
 # contra Render
 API_URL="https://titanic-api-vtf1.onrender.com/" python client.py
 ```
-
-**Tests (opcional):**
-```bash
-python -m pip install -r requirements-dev.txt  # si usas archivo dev
-python -m pytest -q
-```
-
 ---
 ## 8) Errores comunes y respuestas
 ### Validación (422 Unprocessable Entity)
